@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">DiscoverySite</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Radar</string>
+    <string name="title_notifications">Discovery</string>
+    <string name="element_text">Element</string>
+    <string name="close_button">Close</string>
+    <string name="unknown_text">Unknown site</string>
+</resources>
