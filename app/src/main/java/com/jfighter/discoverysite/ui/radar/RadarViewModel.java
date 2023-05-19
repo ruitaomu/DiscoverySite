@@ -1,16 +1,18 @@
 package com.jfighter.discoverysite.ui.radar;
 
+import android.app.Application;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-
+import com.jfighter.discoverysite.database.DiscoveryItemRepository;
 import com.jfighter.discoverysite.util.Coordinate;
+import com.jfighter.discoverysite.util.PoiInfo;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -18,34 +20,53 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
-public class RadarViewModel extends ViewModel implements  LocationListener {
-    private Dictionary<String, Coordinate> mPOIs = new Hashtable<String, Coordinate>();
+public class RadarViewModel extends AndroidViewModel implements  LocationListener {
+    private Dictionary<String, PoiInfo> mPOIs = new Hashtable<String, PoiInfo>();
 
     private final MutableLiveData<String> mText;
 
     private ArrayList<Location> targetLocations;
 
-    public RadarViewModel() {
+    public RadarViewModel(Application application) {
+        super(application);
+
         initPOIs();
         mText = new MutableLiveData<>();
         mText.setValue("No distance data");
 
         targetLocations = new ArrayList<>();
 
+        List<String> discoveredNames = new DiscoveryItemRepository(application).retrieveAllNames();
+
         Enumeration<String> keys = mPOIs.keys();
         while (keys.hasMoreElements()) {
             String key = keys.nextElement();
-            Coordinate loc = mPOIs.get(key);
-            Location targetLocation = new Location("");
-            targetLocation.setLatitude(loc.Y());
-            targetLocation.setLongitude(loc.X());
-            targetLocations.add(targetLocation);
+            if (!discoveredNames.contains(key)) {
+                Coordinate loc = mPOIs.get(key).getmCoordinate();
+                Location targetLocation = new Location("");
+                targetLocation.setLatitude(loc.Y());
+                targetLocation.setLongitude(loc.X());
+                targetLocations.add(targetLocation);
+            }
         }
     }
 
     private void initPOIs() {
-        mPOIs.put("Athens Repository", new Coordinate(31.2304f, 121.4737f));
-        mPOIs.put("Delphi Temple", new Coordinate(31.2304f, 121.4742f));
+        mPOIs.put("Athens Repository", new PoiInfo(
+                    new Coordinate(31.2304f, 121.4737f),
+                    "1",
+                    "The great repository of Athens",
+                    "arch"));
+        mPOIs.put("Delphi Temple", new PoiInfo(
+                    new Coordinate(31.2304f, 121.4742f),
+                    "2",
+                    "Apollo's main temple in Delphi",
+                    "arch"));
+        mPOIs.put("Apollo Statue", new PoiInfo(
+                new Coordinate(31.2306f, 121.4742f),
+                "3",
+                "Apollo's great statue",
+                "Statue"));
     }
 
     public LiveData<String> getText() {
@@ -60,7 +81,10 @@ public class RadarViewModel extends ViewModel implements  LocationListener {
             minDistance = Math.min(distance, minDistance);
         }
         // 计算距离
-        mText.setValue(Float.toString(minDistance));
+
+        if (minDistance != Float.MAX_VALUE) {
+            mText.setValue(Float.toString(minDistance));
+        }
     }
 
     @Override

@@ -35,8 +35,6 @@ public class DiscoveryFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        DiscoveryViewModel discoveryViewModel =
-                new ViewModelProvider(this).get(DiscoveryViewModel.class);
 
         binding = FragmentDiscoveryBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -50,7 +48,7 @@ public class DiscoveryFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
 
         mViewModel = new ViewModelProvider(getActivity()).get(DiscoveryViewModel.class);
-        mViewModel.getAllWords().observe(getActivity(), words -> {
+        mViewModel.getAllNames().observe(getActivity(), words -> {
             // Update the cached copy of the words in the adapter.
             mAdapter.submitList(words);
         });

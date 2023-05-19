@@ -50,9 +50,9 @@ public abstract class DiscoveryItemRoomDatabase extends RoomDatabase {
 
                 DiscoveryItem discoveryItem = new DiscoveryItem("Hello");
                 dao.insert(discoveryItem);
-                discoveryItem = new DiscoveryItem("World2");
+                discoveryItem = new DiscoveryItem("Athens Repository");
                 dao.insert(discoveryItem);
-                discoveryItem = new DiscoveryItem("World3");
+                discoveryItem = new DiscoveryItem("Delphi Temple");
                 dao.insert(discoveryItem);
             });
         }

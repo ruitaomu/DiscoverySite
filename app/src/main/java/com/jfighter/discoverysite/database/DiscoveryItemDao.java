@@ -21,4 +21,7 @@ public interface DiscoveryItemDao {
 
     @Query("SELECT * FROM discoveryitems_table ORDER BY name ASC")
     LiveData<List<DiscoveryItem>> getAlphabetizedNames();
+
+    @Query("SELECT * FROM discoveryitems_table ORDER BY name ASC")
+    List<DiscoveryItem> retrieveAlphabetizedNames();
 }

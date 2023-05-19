@@ -15,15 +15,15 @@ public class DiscoveryViewModel extends AndroidViewModel {
 
     private DiscoveryItemRepository mRepository;
 
-    private final LiveData<List<DiscoveryItem>> mAllWords;
+    private final LiveData<List<DiscoveryItem>> mAllNames;
 
     public DiscoveryViewModel(Application application) {
         super(application);
         mRepository = new DiscoveryItemRepository(application);
-        mAllWords = mRepository.getAllNames();
+        mAllNames = mRepository.getAllNames();
     }
 
-    LiveData<List<DiscoveryItem>> getAllWords() { return mAllWords; }
+    LiveData<List<DiscoveryItem>> getAllNames() { return mAllNames; }
 
     public void insert(DiscoveryItem discoveryItem) { mRepository.insert(discoveryItem); }
 }
