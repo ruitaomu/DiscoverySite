@@ -1,6 +1,8 @@
 package com.jfighter.discoverysite.ui.discovery;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
@@ -12,10 +14,14 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.jfighter.discoverysite.R;
+import com.jfighter.discoverysite.util.Helper;
+import com.jfighter.discoverysite.util.PoiInfo;
+
+import java.io.InputStream;
 
 public class PopupDetailsWindow extends PopupWindow {
 
-    public PopupDetailsWindow(Context context) {
+    public PopupDetailsWindow(Context context, String name) {
         super(context);
 
         // Set popup window size
@@ -34,7 +40,21 @@ public class PopupDetailsWindow extends PopupWindow {
         ImageView imageView = contentView.findViewById(R.id.detailsImageView);
 
         // Set text and image for TextView and ImageView here
-        textView.setText("Delphi神庙\n    阿波罗神殿");
+
+        PoiInfo poi = Helper.POI().getPOIByName(name);
+        if (poi != null) {
+            String imageName;
+            imageName = poi.getmImageName();
+            int resourceId = context.getResources().
+                    getIdentifier(imageName, "raw", context.getPackageName());
+            InputStream inputStream = context.getResources().openRawResource(resourceId);
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            imageView.setImageBitmap(bitmap);
+
+            String desc;
+            desc = poi.getmDescription();
+            textView.setText(desc);
+        }
 
         // Get close button from content view and set click listener
         Button closeButton = contentView.findViewById(R.id.detailsCloseButton);

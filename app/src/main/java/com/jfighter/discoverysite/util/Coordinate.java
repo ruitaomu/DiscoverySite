@@ -1,19 +1,19 @@
 package com.jfighter.discoverysite.util;
 
 public class Coordinate {
-    private final float posX;
-    private final float posY;
+    private final double posX;
+    private final double posY;
 
-    public Coordinate(float y, float x) {
+    public Coordinate(double y, double x) {
         this.posX = x;
         this.posY = y;
     }
 
-    public float X() {
+    public double X() {
         return posX;
     }
 
-    public float Y() {
+    public double Y() {
         return posY;
     }
 }

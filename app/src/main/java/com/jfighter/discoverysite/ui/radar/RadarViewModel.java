@@ -4,6 +4,7 @@ import android.app.Application;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -12,62 +13,47 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.jfighter.discoverysite.database.DiscoveryItemRepository;
 import com.jfighter.discoverysite.util.Coordinate;
+import com.jfighter.discoverysite.util.Helper;
 import com.jfighter.discoverysite.util.PoiInfo;
+import com.jfighter.discoverysite.util.PoiList;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.List;
 
 public class RadarViewModel extends AndroidViewModel implements  LocationListener {
-    private Dictionary<String, PoiInfo> mPOIs = new Hashtable<String, PoiInfo>();
 
+    private final static String TAG = "RadarViewModel";
     private final MutableLiveData<String> mText;
 
-    private ArrayList<Location> targetLocations;
+    private final ArrayList<Location> mTargetLocations;
 
     public RadarViewModel(Application application) {
         super(application);
 
-        initPOIs();
+        PoiList pois = Helper.POI();
         mText = new MutableLiveData<>();
         mText.setValue("No distance data");
 
-        targetLocations = new ArrayList<>();
+        mTargetLocations = new ArrayList<>();
 
-        List<String> discoveredNames = new DiscoveryItemRepository(application).retrieveAllNames();
+        DiscoveryItemRepository discoveredItemRepository = Helper.getDiscoveryItemRepository(application);
+        List<String> discoveredNames = discoveredItemRepository.retrieveAllNames();
 
-        Enumeration<String> keys = mPOIs.keys();
-        while (keys.hasMoreElements()) {
-            String key = keys.nextElement();
-            if (!discoveredNames.contains(key)) {
-                Coordinate loc = mPOIs.get(key).getmCoordinate();
+        Enumeration<String> names = pois.getNames();
+        while (names.hasMoreElements()) {
+            String name = names.nextElement();
+            if (!discoveredNames.contains(name)) {
+                Coordinate loc = pois.getPOIByName(name).getmCoordinate();
                 Location targetLocation = new Location("");
                 targetLocation.setLatitude(loc.Y());
                 targetLocation.setLongitude(loc.X());
-                targetLocations.add(targetLocation);
+                mTargetLocations.add(targetLocation);
             }
         }
+
     }
 
-    private void initPOIs() {
-        mPOIs.put("Athens Repository", new PoiInfo(
-                    new Coordinate(31.2304f, 121.4737f),
-                    "1",
-                    "The great repository of Athens",
-                    "arch"));
-        mPOIs.put("Delphi Temple", new PoiInfo(
-                    new Coordinate(31.2304f, 121.4742f),
-                    "2",
-                    "Apollo's main temple in Delphi",
-                    "arch"));
-        mPOIs.put("Apollo Statue", new PoiInfo(
-                new Coordinate(31.2306f, 121.4742f),
-                "3",
-                "Apollo's great statue",
-                "Statue"));
-    }
 
     public LiveData<String> getText() {
         return mText;
@@ -76,14 +62,31 @@ public class RadarViewModel extends AndroidViewModel implements  LocationListene
     @Override
     public void onLocationChanged(@NonNull Location location) {
         float minDistance = Float.MAX_VALUE;
-        for (Location loc: targetLocations) {
+        Location nearestTargetLocation = null;
+        for (Location loc: mTargetLocations) {
             float distance = location.distanceTo(loc);
             minDistance = Math.min(distance, minDistance);
+            if (distance == minDistance) {
+                nearestTargetLocation = loc;
+            }
         }
         // 计算距离
 
-        if (minDistance != Float.MAX_VALUE) {
-            mText.setValue(Float.toString(minDistance));
+        if (minDistance != Float.MAX_VALUE && nearestTargetLocation != null) {
+            if (minDistance < 10.0) {
+                mTargetLocations.remove(nearestTargetLocation);
+                Log.d(TAG, "Discovered a site!");
+                PoiInfo poi = Helper.POI().getPOIByLocation(nearestTargetLocation);
+                if (poi != null) {
+                    mText.setValue(poi.getmDescription());
+                } else {
+                    Log.e(TAG, "Discovered site location is missing in target list");
+                }
+            } else {
+                mText.setValue(Float.toString(minDistance));
+            }
+        } else {
+            mText.setValue("No distance data");
         }
     }
 

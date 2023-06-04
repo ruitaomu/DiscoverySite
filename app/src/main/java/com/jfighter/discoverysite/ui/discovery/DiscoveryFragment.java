@@ -1,5 +1,7 @@
 package com.jfighter.discoverysite.ui.discovery;
 
+import android.content.Context;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -14,14 +16,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jfighter.discoverysite.R;
 import com.jfighter.discoverysite.databinding.FragmentDiscoveryBinding;
+import com.jfighter.discoverysite.util.Helper;
 
 public class DiscoveryFragment extends Fragment {
 
     private FragmentDiscoveryBinding binding;
-
     protected RecyclerView mRecyclerView;
     protected DiscoveryListAdapter mAdapter;
-    private DiscoveryViewModel mViewModel;
+    private Context mContext;
+    private LocationListener mLocationListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,11 +50,12 @@ public class DiscoveryFragment extends Fragment {
         // Set DiscoveryListAdapter as the adapter for RecyclerView.
         mRecyclerView.setAdapter(mAdapter);
 
-        mViewModel = new ViewModelProvider(getActivity()).get(DiscoveryViewModel.class);
-        mViewModel.getAllNames().observe(getActivity(), words -> {
+        DiscoveryViewModel discoveryViewModel = new ViewModelProvider(getActivity()).get(DiscoveryViewModel.class);
+        discoveryViewModel.getAllNames().observe(getActivity(), words -> {
             // Update the cached copy of the words in the adapter.
             mAdapter.submitList(words);
         });
+        mLocationListener = Helper.registerLocationUpdateListener(this, mContext, discoveryViewModel);
 
         return root;
     }
@@ -60,10 +64,17 @@ public class DiscoveryFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        Helper.removeLocationUpdater(mContext, mLocationListener);
     }
 
-    public void openWebView(String url) {
-        PopupDetailsWindow popupWindow = new PopupDetailsWindow(getContext());
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mContext = context;
+    }
+
+    public void openWebView(String poiName) {
+        PopupDetailsWindow popupWindow = new PopupDetailsWindow(getContext(), poiName);
         popupWindow.showAtLocation(getView(), Gravity.CENTER, 0, 0);
     }
 

@@ -13,7 +13,11 @@ public class DiscoveryItem {
     @ColumnInfo(name = "name")
     private String mName;
 
-    public DiscoveryItem(@NonNull String name) {this.mName = name;}
+    public DiscoveryItem(@NonNull String name) {
+        this.mName = name;
+    }
 
-    public String getName(){return this.mName;}
+    public String getName() {
+        return this.mName;
+    }
 }

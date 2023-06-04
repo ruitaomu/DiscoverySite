@@ -1,0 +1,26 @@
+{
+  "Athens Repository": {
+    "coordinates": [
+      31.2304,
+      121.4737
+    ],
+    "imgname": "del_athrep",
+    "type": "arch"
+  },
+
+  "Delphi Temple": {
+    "coordinates": [
+      31.2304, 121.4742
+    ],
+    "imgname": "del_delphitemp",
+    "type": "arch"
+  },
+
+  "Apollo Statue":{
+    "coordinates": [
+      31.2306, 121.4742
+    ],
+    "imgname": "del_apollosta",
+    "type": "statue"
+  }
+}

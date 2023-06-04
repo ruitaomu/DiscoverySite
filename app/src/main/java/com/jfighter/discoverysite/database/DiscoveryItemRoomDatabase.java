@@ -35,7 +35,7 @@ public abstract class DiscoveryItemRoomDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
+    private final static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
@@ -47,13 +47,6 @@ public abstract class DiscoveryItemRoomDatabase extends RoomDatabase {
                 // If you want to start with more words, just add them.
                 DiscoveryItemDao dao = INSTANCE.discoveryItemDao();
                 dao.deleteAll();
-
-                DiscoveryItem discoveryItem = new DiscoveryItem("Hello");
-                dao.insert(discoveryItem);
-                discoveryItem = new DiscoveryItem("Athens Repository");
-                dao.insert(discoveryItem);
-                discoveryItem = new DiscoveryItem("Delphi Temple");
-                dao.insert(discoveryItem);
             });
         }
     };

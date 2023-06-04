@@ -1,5 +1,6 @@
 package com.jfighter.discoverysite.ui.discovery;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jfighter.discoverysite.R;
 import com.jfighter.discoverysite.database.DiscoveryItem;
+import com.jfighter.discoverysite.util.Helper;
+import com.jfighter.discoverysite.util.PoiInfo;
 
 public class DiscoveryListAdapter extends ListAdapter<DiscoveryItem, DiscoveryListAdapter.ViewHolder> {
     private static final String TAG = "DiscoveryListAdapter";
@@ -35,7 +38,8 @@ public class DiscoveryListAdapter extends ListAdapter<DiscoveryItem, DiscoveryLi
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "Element " + getAdapterPosition() + " clicked.");
-                    parent.openWebView("http://www.baidu.com");
+                    Log.d(TAG, "Item " + getTextView().getText() + " clicked.");
+                    parent.openWebView(getTextView().getText().toString());
                 }
             });
             textView = (TextView) v.findViewById(R.id.textView);
@@ -88,7 +92,21 @@ public class DiscoveryListAdapter extends ListAdapter<DiscoveryItem, DiscoveryLi
         // Get element from your dataset at this position and replace the contents of the view
         // with that element
         DiscoveryItem item = getItem(position);
-        viewHolder.getTextView().setText(item.getName());
-        viewHolder.getPoiImageView().setImageResource(R.drawable.questionmark);
+        String name = item.getName();
+        Log.d(TAG, "Item " + name);
+
+        // Set ViewHolder's text
+        viewHolder.getTextView().setText(name);
+
+        // Set ViewHolder's image
+        PoiInfo poi = Helper.POI().getPOIByName(name);
+        if (poi != null) {
+            String imageName = poi.getmImageName();
+            Context context = viewHolder.getPoiImageView().getContext();
+            int resourceId = context.getResources().
+                    getIdentifier(imageName, "raw", context.getPackageName());
+
+            viewHolder.getPoiImageView().setImageResource(resourceId);
+        }
     }
 }
