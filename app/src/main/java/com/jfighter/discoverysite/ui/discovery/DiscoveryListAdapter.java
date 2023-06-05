@@ -1,6 +1,5 @@
 package com.jfighter.discoverysite.ui.discovery;
 
-import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -101,11 +100,22 @@ public class DiscoveryListAdapter extends ListAdapter<DiscoveryItem, DiscoveryLi
         // Set ViewHolder's image
         PoiInfo poi = Helper.POI().getPOIByName(name);
         if (poi != null) {
-            String imageName = poi.getmImageName();
-            Context context = viewHolder.getPoiImageView().getContext();
-            int resourceId = context.getResources().
-                    getIdentifier(imageName, "raw", context.getPackageName());
+//            String imageName = poi.getmImageName();
+//            Context context = viewHolder.getPoiImageView().getContext();
+//            int resourceId = context.getResources().
+//                    getIdentifier(imageName, "raw", context.getPackageName());
 
+            int resourceId;
+            switch (poi.getmType()) {
+                case "statue":
+                    resourceId = R.drawable.statue_icon;
+                    break;
+                case "arch":
+                    resourceId = R.drawable.temple_icon;
+                    break;
+                default:
+                    resourceId = R.drawable.questionmark_icon;
+            }
             viewHolder.getPoiImageView().setImageResource(resourceId);
         }
     }

@@ -5,7 +5,8 @@
       121.4737
     ],
     "imgname": "del_athrep",
-    "type": "arch"
+    "type": "arch",
+    "description": "雅典的宝库位于Delphi神庙的旁边"
   },
 
   "Delphi Temple": {
@@ -13,7 +14,8 @@
       31.2304, 121.4742
     ],
     "imgname": "del_delphitemp",
-    "type": "arch"
+    "type": "arch",
+    "description": ""
   },
 
   "Apollo Statue":{
@@ -21,6 +23,7 @@
       31.2306, 121.4742
     ],
     "imgname": "del_apollosta",
-    "type": "statue"
+    "type": "statue",
+    "description": ""
   }
 }

@@ -11,6 +11,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.jfighter.discoverysite.database.DiscoveryItem;
 import com.jfighter.discoverysite.database.DiscoveryItemRepository;
 import com.jfighter.discoverysite.util.Coordinate;
 import com.jfighter.discoverysite.util.Helper;
@@ -25,7 +26,7 @@ public class RadarViewModel extends AndroidViewModel implements  LocationListene
 
     private final static String TAG = "RadarViewModel";
     private final MutableLiveData<String> mText;
-
+    DiscoveryItemRepository mDiscoveredItemRepository;
     private final ArrayList<Location> mTargetLocations;
 
     public RadarViewModel(Application application) {
@@ -37,8 +38,8 @@ public class RadarViewModel extends AndroidViewModel implements  LocationListene
 
         mTargetLocations = new ArrayList<>();
 
-        DiscoveryItemRepository discoveredItemRepository = Helper.getDiscoveryItemRepository(application);
-        List<String> discoveredNames = discoveredItemRepository.retrieveAllNames();
+        mDiscoveredItemRepository = Helper.getDiscoveryItemRepository(application);
+        List<String> discoveredNames = mDiscoveredItemRepository.retrieveAllNames();
 
         Enumeration<String> names = pois.getNames();
         while (names.hasMoreElements()) {
@@ -78,7 +79,8 @@ public class RadarViewModel extends AndroidViewModel implements  LocationListene
                 Log.d(TAG, "Discovered a site!");
                 PoiInfo poi = Helper.POI().getPOIByLocation(nearestTargetLocation);
                 if (poi != null) {
-                    mText.setValue(poi.getmDescription());
+                    mText.setValue(poi.getmSiteName());
+                    mDiscoveredItemRepository.insert(new DiscoveryItem(poi.getmSiteName()));
                 } else {
                     Log.e(TAG, "Discovered site location is missing in target list");
                 }

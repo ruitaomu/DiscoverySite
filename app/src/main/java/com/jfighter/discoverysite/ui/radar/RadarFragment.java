@@ -8,12 +8,14 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.jfighter.discoverysite.R;
 import com.jfighter.discoverysite.databinding.FragmentRadarBinding;
 import com.jfighter.discoverysite.ui.discovery.PopupDetailsWindow;
 import com.jfighter.discoverysite.util.Helper;
@@ -36,15 +38,20 @@ public class RadarFragment extends Fragment {
         binding = FragmentRadarBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textDashboard;
+        final ImageView imageView = binding.imageViewRadar;
+        imageView.setImageResource(R.drawable.radar);
+
+        final TextView textView = binding.textRadardisp;
         radarViewModel.getText().observe(getViewLifecycleOwner(), text -> {
             try {
                 Log.d(TAG, "Text change observed: "+text);
                 Double.parseDouble(text);
                 textView.setText(text);
+                imageView.setImageResource(R.drawable.radar);
             } catch (NumberFormatException e) {
                 if (text.equals("No distance data")) {
                     textView.setText(text);
+                    imageView.setImageResource(R.drawable.radar);
                 } else {
                     PopupDetailsWindow popupWindow = new PopupDetailsWindow(getContext(), text);
                     popupWindow.showAtLocation(getView(), Gravity.CENTER, 0, 0);

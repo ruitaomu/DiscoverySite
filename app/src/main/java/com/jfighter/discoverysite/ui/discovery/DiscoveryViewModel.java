@@ -74,7 +74,7 @@ public class DiscoveryViewModel extends AndroidViewModel  implements LocationLis
                 Log.d(TAG, "Discovered a site!");
                 PoiInfo poi = Helper.POI().getPOIByLocation(nearestTargetLocation);
                 if (poi != null) {
-                    mDiscoveredItemRepository.insert(new DiscoveryItem(poi.getmDescription()));
+                    mDiscoveredItemRepository.insert(new DiscoveryItem(poi.getmSiteName()));
                 } else {
                     Log.e(TAG, "Discovered site location is missing in target list");
                 }

@@ -62,8 +62,19 @@ public class Helper {
             return null;
         }
 
-
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
+        boolean needApprove = true;
+        while (needApprove) {
+            try {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
+                needApprove = false;
+            } catch (SecurityException e) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        }
         return listener;
     }
 
@@ -132,11 +143,14 @@ public class Helper {
                 double lng = coordinates.getDouble(1);
                 String filename = item.getString("imgname");
                 String type = item.getString("type");
+                String desc = item.getString("description");
                 Log.d(TAG, "Name: " + name);
                 Log.d(TAG, "Coordinates: " + lat + ", " + lng);
                 Log.d(TAG, "Filename: " + filename);
                 Log.d(TAG, "Type: " + type);
-                poiList.addPOI(name, new PoiInfo(new Coordinate(lat, lng), filename, name, type));
+                poiList.addPOI(name, new PoiInfo(new Coordinate(lat, lng),
+                                                    filename,
+                                                    name, type, desc));
             }
         } catch (JSONException e) {
             e.printStackTrace();

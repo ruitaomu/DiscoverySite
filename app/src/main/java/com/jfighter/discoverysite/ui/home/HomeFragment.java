@@ -35,8 +35,11 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final ImageView imageView = binding.imageView;
-        imageView.setImageResource(R.drawable.arrow);
+        final ImageView arrowView = binding.homeCompassArrowView;
+        arrowView.setImageResource(R.drawable.arrow);
+        final ImageView bgView = binding.homeBackgroundView;
+        bgView.setImageAlpha(64);
+        bgView.setImageResource(R.drawable.homecompassbg);
 
         final TextView textView = binding.textView;
         homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
@@ -46,7 +49,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onChanged(Float newBearing) {
                 if (newBearing != null) {
-                    imageView.setRotation(newBearing);
+                    arrowView.setRotation(newBearing);
                 }
             }
         };

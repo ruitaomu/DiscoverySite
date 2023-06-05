@@ -1,16 +1,21 @@
 package com.jfighter.discoverysite.util;
 
 public class PoiInfo {
-    private Coordinate mCoordinate;
-    private String mImageName;
-    private String mDescription;
-    private String mType;
+    private final String mDescription;
+    private final Coordinate mCoordinate;
+    private final String mImageName;
+    private final String mSiteName;
+    private final String mType;
 
-    public PoiInfo(Coordinate coordinate, String imageName, String description, String type) {
+    public PoiInfo(Coordinate coordinate, 
+                   String imageName, 
+                   String siteName, 
+                   String type, String description) {
         mCoordinate = coordinate;
         mImageName = imageName;
-        mDescription = description;
+        mSiteName = siteName;
         mType = type;
+        mDescription = description;
     }
 
     public Coordinate getmCoordinate() {
@@ -21,11 +26,13 @@ public class PoiInfo {
         return mImageName;
     }
 
-    public String getmDescription() {
-        return mDescription;
+    public String getmSiteName() {
+        return mSiteName;
     }
 
     public String getmType() {
         return mType;
     }
+
+    public String getmDescription() { return mDescription; }
 }
