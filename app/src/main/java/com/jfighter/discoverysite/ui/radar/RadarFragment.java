@@ -40,18 +40,23 @@ public class RadarFragment extends Fragment {
 
         final ImageView imageView = binding.imageViewRadar;
         imageView.setImageResource(R.drawable.radar);
+        final ImageView imageViewForeground = binding.imageViewRadarForeground;
+        imageViewForeground.setImageResource(R.drawable.radar_foreground);
+        imageViewForeground.setImageAlpha(0);
 
         final TextView textView = binding.textRadardisp;
         radarViewModel.getText().observe(getViewLifecycleOwner(), text -> {
             try {
                 Log.d(TAG, "Text change observed: "+text);
-                Double.parseDouble(text);
+                int distance = (int)Double.parseDouble(text);
                 textView.setText(text);
-                imageView.setImageResource(R.drawable.radar);
+                int alpha = 255 - ((distance - 10) * 5);
+                if (alpha < 0) alpha = 0;
+                if (alpha > 255) alpha = 255;
+                imageViewForeground.setImageAlpha(alpha);
             } catch (NumberFormatException e) {
                 if (text.equals("No distance data")) {
                     textView.setText(text);
-                    imageView.setImageResource(R.drawable.radar);
                 } else {
                     PopupDetailsWindow popupWindow = new PopupDetailsWindow(getContext(), text);
                     popupWindow.setAnimationStyle(R.style.popupWindowAnimation);

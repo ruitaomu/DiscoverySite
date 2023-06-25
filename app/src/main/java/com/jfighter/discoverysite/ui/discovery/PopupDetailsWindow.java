@@ -36,6 +36,7 @@ public class PopupDetailsWindow extends PopupWindow {
         setContentView(contentView);
 
         // Get TextView and ImageView from content view
+        TextView detailsTitleTextView = contentView.findViewById(R.id.detailsTitleTextView);
         TextView textView = contentView.findViewById(R.id.detailsTextView);
         ImageView imageView = contentView.findViewById(R.id.detailsImageView);
 
@@ -51,9 +52,8 @@ public class PopupDetailsWindow extends PopupWindow {
             Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
             imageView.setImageBitmap(bitmap);
 
-            String desc;
-            desc = poi.getmDescription();
-            textView.setText(desc);
+            textView.setText(poi.getmDescription());
+            detailsTitleTextView.setText(poi.getmSiteName());
         }
 
         // Get close button from content view and set click listener
