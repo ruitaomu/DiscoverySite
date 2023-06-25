@@ -4,6 +4,7 @@
     <string name="title_dashboard">Radar</string>
     <string name="title_notifications">Discovery</string>
     <string name="element_text">Element</string>
-    <string name="close_button">Close</string>
+    <string name="close_button">关闭</string>
     <string name="unknown_text">Unknown site</string>
+    <string name="back_button">回退</string>
 </resources>

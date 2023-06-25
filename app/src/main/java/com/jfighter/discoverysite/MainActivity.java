@@ -27,6 +27,10 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "Missing POI file!");
         }
 
+        if (Helper.HomeLocation(getApplicationContext()) == null) {
+            Log.e(TAG, "Missing Home Location file!");
+        }
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 

@@ -1,6 +1,7 @@
 package com.jfighter.discoverysite.ui.home;
 
 import android.content.Context;
+import android.hardware.SensorEventListener;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private Context mContext;
     private LocationListener mLocationListener;
+    private SensorEventListener mRotationListener;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -31,6 +33,7 @@ public class HomeFragment extends Fragment {
 
         // 注册 LocationListener
         mLocationListener = Helper.registerLocationUpdateListener(this, mContext, homeViewModel);
+        mRotationListener = Helper.registerRotationUpdateListener(this, mContext, homeViewModel);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -63,6 +66,7 @@ public class HomeFragment extends Fragment {
         super.onDestroyView();
         binding = null;
         Helper.removeLocationUpdater(mContext, mLocationListener);
+        Helper.removeRotationUpdater(mContext, mRotationListener);
     }
 
     @Override

@@ -75,6 +75,7 @@ public class DiscoveryFragment extends Fragment {
 
     public void openWebView(String poiName) {
         PopupDetailsWindow popupWindow = new PopupDetailsWindow(getContext(), poiName);
+        popupWindow.setAnimationStyle(R.style.popupWindowAnimation);
         popupWindow.showAtLocation(getView(), Gravity.CENTER, 0, 0);
     }
 

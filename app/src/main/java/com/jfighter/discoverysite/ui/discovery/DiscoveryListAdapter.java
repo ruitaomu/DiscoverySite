@@ -107,10 +107,10 @@ public class DiscoveryListAdapter extends ListAdapter<DiscoveryItem, DiscoveryLi
 
             int resourceId;
             switch (poi.getmType()) {
-                case "statue":
+                case "arch":
                     resourceId = R.drawable.statue_icon;
                     break;
-                case "arch":
+                case "temple":
                     resourceId = R.drawable.temple_icon;
                     break;
                 default:

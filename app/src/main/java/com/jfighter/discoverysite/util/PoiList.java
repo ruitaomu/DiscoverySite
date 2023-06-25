@@ -8,10 +8,10 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 public class PoiList {
-    private static Dictionary<String, PoiInfo> mPOIs = null;
-    private static ArrayList<String> mPOIIndexes = null;
+    private Dictionary<String, PoiInfo> mPOIs = null;
+    private ArrayList<String> mPOIIndexes = null;
 
-    private static int mTotalItems = 0;
+    private int mTotalItems = 0;
 
     protected PoiList() {
         mTotalItems = 0;
@@ -20,8 +20,12 @@ public class PoiList {
     }
 
     public PoiInfo getAtIndex(int index) {
-        String name = mPOIIndexes.get(index);
-        return getPOIByName(name);
+        if (index >= mPOIIndexes.size()) {
+            return null;
+        } else {
+            String name = mPOIIndexes.get(index);
+            return getPOIByName(name);
+        }
     }
 
     protected int addPOI(String name, PoiInfo poiInfo) {
@@ -45,7 +49,7 @@ public class PoiList {
         while (pois.hasMoreElements()) {
             PoiInfo poi = pois.nextElement();
             Coordinate loc = poi.getmCoordinate();
-            if (loc.X() == location.getLongitude() && loc.Y() == location.getLatitude()) {
+            if (loc.getLongitude() == location.getLongitude() && loc.getLatitude() == location.getLatitude()) {
                 return poi;
             }
         }

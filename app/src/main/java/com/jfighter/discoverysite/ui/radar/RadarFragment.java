@@ -54,6 +54,7 @@ public class RadarFragment extends Fragment {
                     imageView.setImageResource(R.drawable.radar);
                 } else {
                     PopupDetailsWindow popupWindow = new PopupDetailsWindow(getContext(), text);
+                    popupWindow.setAnimationStyle(R.style.popupWindowAnimation);
                     popupWindow.showAtLocation(getView(), Gravity.CENTER, 0, 0);
                 }
             }

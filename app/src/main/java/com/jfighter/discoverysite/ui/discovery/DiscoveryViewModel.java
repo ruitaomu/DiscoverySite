@@ -46,8 +46,8 @@ public class DiscoveryViewModel extends AndroidViewModel  implements LocationLis
             if (!discoveredNames.contains(name)) {
                 Coordinate loc = pois.getPOIByName(name).getmCoordinate();
                 Location targetLocation = new Location("");
-                targetLocation.setLatitude(loc.Y());
-                targetLocation.setLongitude(loc.X());
+                targetLocation.setLatitude(loc.getLatitude());
+                targetLocation.setLongitude(loc.getLongitude());
                 mTargetLocations.add(targetLocation);
             }
         }

@@ -47,8 +47,8 @@ public class RadarViewModel extends AndroidViewModel implements  LocationListene
             if (!discoveredNames.contains(name)) {
                 Coordinate loc = pois.getPOIByName(name).getmCoordinate();
                 Location targetLocation = new Location("");
-                targetLocation.setLatitude(loc.Y());
-                targetLocation.setLongitude(loc.X());
+                targetLocation.setLatitude(loc.getLatitude());
+                targetLocation.setLongitude(loc.getLongitude());
                 mTargetLocations.add(targetLocation);
             }
         }
@@ -85,7 +85,7 @@ public class RadarViewModel extends AndroidViewModel implements  LocationListene
                     Log.e(TAG, "Discovered site location is missing in target list");
                 }
             } else {
-                mText.setValue(Float.toString(minDistance));
+                mText.setValue(Integer.toString((int)minDistance));
             }
         } else {
             mText.setValue("No distance data");

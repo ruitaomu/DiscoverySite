@@ -1,19 +1,19 @@
 package com.jfighter.discoverysite.util;
 
 public class Coordinate {
-    private final double posX;
-    private final double posY;
+    private final double latitude;
+    private final double longitude;
 
-    public Coordinate(double y, double x) {
-        this.posX = x;
-        this.posY = y;
+    public Coordinate(double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
-    public double X() {
-        return posX;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public double Y() {
-        return posY;
+    public double getLongitude() {
+        return longitude;
     }
 }

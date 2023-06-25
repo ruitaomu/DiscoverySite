@@ -4,6 +4,9 @@ import android.Manifest;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.util.Log;
@@ -31,6 +34,47 @@ public class Helper {
     private static PoiList mPOIs = null;
 
     private static DiscoveryItemRepository mRepository;
+    private static PoiList mHomeLocations = null;
+    private static SensorManager mSensorManager;
+    private static Sensor mAccelerometer;
+
+    public static SensorEventListener registerRotationUpdateListener(Fragment fragment, Context context, SensorEventListener listener) {
+        ActivityResultLauncher<String> requestPermissionLauncher =
+                fragment.registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                    if (isGranted) {
+                        // Permission is granted. Continue the action or workflow in your
+                        // app.
+                    } else {
+                        // Explain to the user that the feature is unavailable because the
+                        // feature requires a permission that the user has denied. At the
+                        // same time, respect the user's decision. Don't link to system
+                        // settings in an effort to convince the user to change their
+                        // decision.
+                    }
+                });
+
+        // 注册 LocationListener
+        if (context == null) {
+            return null;
+        }
+
+        mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+
+
+        if (mSensorManager == null) {
+            return null;
+        }
+
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+        mSensorManager.registerListener(listener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        return listener;
+    }
+
+    public static void removeRotationUpdater(Context context, SensorEventListener listener) {
+        if (context != null && listener != null && mSensorManager != null){
+            mSensorManager.unregisterListener(listener);
+        }
+    }
 
     public static LocationListener registerLocationUpdateListener(Fragment fragment, Context context, LocationListener listener) {
         ActivityResultLauncher<String> requestPermissionLauncher =
@@ -65,7 +109,7 @@ public class Helper {
         boolean needApprove = true;
         while (needApprove) {
             try {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, listener);
                 needApprove = false;
             } catch (SecurityException e) {
                 try {
@@ -89,7 +133,7 @@ public class Helper {
 
     public static synchronized PoiList POI(Context context) {
         if (mPOIs == null && context != null) {
-            JSONObject json = readPOIJSON(context);
+            JSONObject json = readPOIJSON(context, R.raw.poi);
             mPOIs = new PoiList();
             initPOIs(mPOIs, json);
         }
@@ -100,6 +144,17 @@ public class Helper {
         return POI(null);
     }
 
+    public static synchronized PoiList HomeLocation(Context context) {
+        if (mHomeLocations == null && context != null) {
+            JSONObject json = readPOIJSON(context, R.raw.home);
+            mHomeLocations = new PoiList();
+            initHomeLocations(mHomeLocations, json);
+        }
+        return mHomeLocations;
+    }
+
+    public static synchronized PoiList HomeLocation() { return HomeLocation(null); }
+
     public static synchronized DiscoveryItemRepository getDiscoveryItemRepository(Application application) {
         if (mRepository == null) {
             mRepository = new DiscoveryItemRepository(application);
@@ -107,12 +162,12 @@ public class Helper {
         return mRepository;
     }
 
-    private static JSONObject readPOIJSON(Context context) {
+    private static JSONObject readPOIJSON(Context context, int id) {
         String jsonString;
         JSONObject jsonObject = null;
         try {
             // 从资源文件中获取JSON文本数据
-            InputStream inputStream = context.getResources().openRawResource(R.raw.poi);
+            InputStream inputStream = context.getResources().openRawResource(id);
             int size = inputStream.available();
             byte[] buffer = new byte[size];
             inputStream.read(buffer);
@@ -151,6 +206,27 @@ public class Helper {
                 poiList.addPOI(name, new PoiInfo(new Coordinate(lat, lng),
                                                     filename,
                                                     name, type, desc));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private static void initHomeLocations(PoiList poiList, JSONObject jsonObject) {
+        try {
+            Iterator<String> keys = jsonObject.keys();
+            while (keys.hasNext()) {
+                String name = keys.next();
+                JSONObject item = jsonObject.getJSONObject(name);
+                JSONArray coordinates = item.getJSONArray("coordinates");
+                double lat = coordinates.getDouble(0);
+                double lng = coordinates.getDouble(1);
+                Log.d(TAG, "Name: " + name);
+                Log.d(TAG, "Coordinates: " + lat + ", " + lng);
+                poiList.addPOI(name, new PoiInfo(new Coordinate(lat, lng),
+                        "",
+                        name, "", ""));
             }
         } catch (JSONException e) {
             e.printStackTrace();

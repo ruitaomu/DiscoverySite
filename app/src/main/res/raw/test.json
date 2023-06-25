@@ -1,0 +1,28 @@
+{
+  "Home": {
+    "coordinates": [
+      39.928512,116.316280
+    ],
+    "imgname": "fidias_arch_opa",
+    "type": "arch",
+    "description": "15号楼"
+  },
+
+  "14号楼": {
+    "coordinates": [
+      39.928633,116.315521
+    ],
+    "imgname": "zeusinside_temple_opa",
+    "type": "temple",
+    "description": "14号楼门口"
+  },
+
+  "West gate":{
+    "coordinates": [
+      39.929010,116.315189
+    ],
+    "imgname": "hera_front_temple_opa",
+    "type": "temple",
+    "description": "西门"
+  }
+}

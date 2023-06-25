@@ -1,0 +1,19 @@
+{
+  "Olympia": {
+    "coordinates": [
+      37.643173, 21.629445
+    ]
+  },
+
+  "Delphi": {
+    "coordinates": [
+      38.480378, 22.500003
+    ]
+  },
+
+  "Athens Acropolis":{
+    "coordinates": [
+      37.971403, 23.723765
+    ]
+  }
+}
