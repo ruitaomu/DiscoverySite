@@ -24,7 +24,10 @@ import java.util.List;
 
 public class RadarViewModel extends AndroidViewModel implements  LocationListener {
 
+    public final static String DISTANCE_OUT_OF_SCOPE = "附近未发现目标";
+
     private final static String TAG = "RadarViewModel";
+    private final static float MAX_SEARCHABLE_DISTANCE = 10000.0f;
     private final MutableLiveData<String> mText;
     DiscoveryItemRepository mDiscoveredItemRepository;
     private final ArrayList<Location> mTargetLocations;
@@ -34,7 +37,7 @@ public class RadarViewModel extends AndroidViewModel implements  LocationListene
 
         PoiList pois = Helper.POI();
         mText = new MutableLiveData<>();
-        mText.setValue("No distance data");
+        mText.setValue(DISTANCE_OUT_OF_SCOPE);
 
         mTargetLocations = new ArrayList<>();
 
@@ -62,7 +65,7 @@ public class RadarViewModel extends AndroidViewModel implements  LocationListene
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        float minDistance = Float.MAX_VALUE;
+        float minDistance = MAX_SEARCHABLE_DISTANCE;
         Location nearestTargetLocation = null;
         for (Location loc: mTargetLocations) {
             float distance = location.distanceTo(loc);
@@ -73,7 +76,7 @@ public class RadarViewModel extends AndroidViewModel implements  LocationListene
         }
         // 计算距离
 
-        if (minDistance != Float.MAX_VALUE && nearestTargetLocation != null) {
+        if (minDistance != MAX_SEARCHABLE_DISTANCE && nearestTargetLocation != null) {
             if (minDistance < 10.0) {
                 mTargetLocations.remove(nearestTargetLocation);
                 Log.d(TAG, "Discovered a site!");
@@ -88,7 +91,7 @@ public class RadarViewModel extends AndroidViewModel implements  LocationListene
                 mText.setValue(Integer.toString((int)minDistance));
             }
         } else {
-            mText.setValue("No distance data");
+            mText.setValue(DISTANCE_OUT_OF_SCOPE);
         }
     }
 

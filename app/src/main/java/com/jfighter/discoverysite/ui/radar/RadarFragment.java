@@ -55,7 +55,7 @@ public class RadarFragment extends Fragment {
                 if (alpha > 255) alpha = 255;
                 imageViewForeground.setImageAlpha(alpha);
             } catch (NumberFormatException e) {
-                if (text.equals("No distance data")) {
+                if (text.equals(RadarViewModel.DISTANCE_OUT_OF_SCOPE)) {
                     textView.setText(text);
                 } else {
                     PopupDetailsWindow popupWindow = new PopupDetailsWindow(getContext(), text);

@@ -33,7 +33,7 @@ public class HomeViewModel extends ViewModel implements  LocationListener, Senso
         mBearing = new MutableLiveData<>();
         mBearing.setValue((float)0.0);
         mText = new MutableLiveData<>();
-        mText.setValue("Looking for GPS signal...");
+        mText.setValue("正在定位...");
         mHomeLocations = new ArrayList<>();
         PoiList homePOIs = Helper.HomeLocation();
         int i = 0;
@@ -69,7 +69,7 @@ public class HomeViewModel extends ViewModel implements  LocationListener, Senso
             mDirection = location.bearingTo(nearestLocation);
             mBearing.setValue(mDirection - mAzimuth);
             // 计算距离
-            mText.setValue(Float.toString(location.distanceTo(nearestLocation)));
+            mText.setValue(Integer.toString((int)location.distanceTo(nearestLocation)));
             //String pos = Double.toString(location.getLatitude())+","+Double.toString(location.getLongitude());
             //mText.setValue(pos);
         }
